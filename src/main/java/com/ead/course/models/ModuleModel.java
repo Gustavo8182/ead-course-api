@@ -38,7 +38,6 @@ public class ModuleModel implements Serializable {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "module", fetch = FetchType.LAZY)
-    //Estamos usando fetch mode subselect para otimizar a consulta e evitar o problema n+1
     @Fetch(FetchMode.SUBSELECT)
     private Set<LessonModel> lessons;
 }

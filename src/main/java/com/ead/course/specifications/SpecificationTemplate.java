@@ -1,6 +1,7 @@
 package com.ead.course.specifications;
 
 import com.ead.course.models.CourseModel;
+import com.ead.course.models.CourseUserModel;
 import com.ead.course.models.LessonModel;
 import com.ead.course.models.ModuleModel;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
@@ -10,11 +11,11 @@ import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.util.Collection;
 import java.util.UUID;
 
-//Esta clase define especificaciones reutilizables para consultas JPA en los modelos CourseModel, ModuleModel y LessonModel.
 public class SpecificationTemplate {
 
     @And({
@@ -31,6 +32,7 @@ public class SpecificationTemplate {
     @Spec(path = "title", spec = Like.class)
     public interface LessonSpec extends Specification<LessonModel> {}
 
+    //Este especification é para buscar todos os módulos de um curso específico
     public static Specification<ModuleModel> moduleCourseId(final UUID courseId) {
         return (root, query, cb) -> {
             query.distinct(true);
@@ -48,6 +50,15 @@ public class SpecificationTemplate {
             Root<ModuleModel> module = query.from(ModuleModel.class);
             Expression<Collection<LessonModel>> moduleLessons = module.get("lessons");
             return cb.and(cb.equal(module.get("moduleId"), moduleId), cb.isMember(lesson, moduleLessons));
+        };
+    }
+
+    //Este especification é para buscar todos os cursos de um usuário específico
+    public static Specification<CourseModel> courseUserId(final UUID userId) {
+        return (root, query, cb) -> {
+            query.distinct(true);
+            Join<CourseModel, CourseUserModel> courseProd = root.join("coursesUsers");
+            return cb.equal(courseProd.get("userId"), userId);
         };
     }
 }

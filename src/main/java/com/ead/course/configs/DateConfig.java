@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Primary;
 import java.time.format.DateTimeFormatter;
 
 //@Configuration
-//Esta classe não está mais em uso, pois a configuração do ObjectMapper foi movida para application.yml, não estamos usando mais o bean ObjectMapper personalizado é só de exemplo.
 public class DateConfig {
 
     public static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";

@@ -29,12 +29,9 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public void delete(ModuleModel moduleModel) {
         List<LessonModel> lessonModelList = lessonRepository.findAllLessonsIntoModule(moduleModel.getModuleId());
-        //validando se o modulo nao esta vazia antes de deletar
         if (!lessonModelList.isEmpty()){
-            //se houver aulas dentro do modulo, deletar todas as aulas primeiro
             lessonRepository.deleteAll(lessonModelList);
         }
-        //deletando o modulo
         moduleRepository.delete(moduleModel);
     }
 

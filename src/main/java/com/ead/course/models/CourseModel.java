@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-//Esta notaçao @Data do Lombok gera os getters, setters, toString, equals e hashCode automaticamente
+
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
@@ -32,7 +32,6 @@ public class CourseModel implements Serializable {
     private String description;
     @Column
     private String imageUrl;
-    //estamos usando o formato ISO 8601 para datas no padrão UTC
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss'Z'")
     @Column(nullable = false)
     private LocalDateTime creationDate;
@@ -48,11 +47,17 @@ public class CourseModel implements Serializable {
     @Column(nullable = false)
     private UUID userInstructor;
 
-    //Relacionamento OneToMany com ModuleModel com o jsonProperty para evitar recursividade infinita
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY )
-    //fetch mode subselect para otimizar a consulta e evitar o problema n+1
     @Fetch(FetchMode.SUBSELECT)
     private Set<ModuleModel> modules;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    private Set<CourseUserModel> coursesUsers;
+
+    public CourseUserModel convertToCourseUserModel(UUID userID){
+        return new CourseUserModel(null, userID, this);
+    }
 
 }

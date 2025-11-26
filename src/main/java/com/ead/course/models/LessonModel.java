@@ -31,7 +31,6 @@ public class LessonModel implements Serializable {
     private LocalDateTime creationDate;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    //estabelecendo o relacionamento ManyToOne com ModuleModel o fetch LAZY para otimizar a consulta e o optional false para garantir que toda lição pertença a um módulo
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ModuleModel module;
 }
