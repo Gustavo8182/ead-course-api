@@ -44,6 +44,7 @@ public class CourseUserController {
     }
 
     @PostMapping("/courses/{courseId}/users/subscription")
+    //Este metodo lida com a inscrição de um usuário em um curso específico.
     public  ResponseEntity<Object> saveSubscriptionUserInCourse(@PathVariable(value = "courseId") UUID courseId,
                                                                 @RequestBody @Valid SubscriptionDto subscriptionDto){
         ResponseEntity<UserDto> responseUser;
@@ -51,10 +52,12 @@ public class CourseUserController {
         if(!courseModelOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course Not Found.");
         }
+        //Verifica se a inscrição já existe para o usuário no curso especificado.
         if(courseUserService.existsByCourseAndUserId(courseModelOptional.get(), subscriptionDto.getUserId())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: subscription already exists!");
         }
         try {
+            //Faz uma chamada ao microserviço de autenticação para obter informações sobre o usuário.
             responseUser = authUserClient.getOneUserById(subscriptionDto.getUserId());
             if(responseUser.getBody().getUserStatus().equals(UserStatus.BLOCKED)){
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("User is blocked.");
@@ -64,6 +67,7 @@ public class CourseUserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             }
         }
+        //Salva a inscrição do usuário no curso e envia uma notificação, retornando o modelo do usuário do curso.
         CourseUserModel courseUserModel = courseUserService.saveAndSendSubscriptionUserInCourse(courseModelOptional.get().convertToCourseUserModel(subscriptionDto.getUserId()));
         return ResponseEntity.status(HttpStatus.CREATED).body(courseUserModel);
     }

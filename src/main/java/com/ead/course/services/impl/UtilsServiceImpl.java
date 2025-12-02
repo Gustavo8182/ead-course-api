@@ -9,7 +9,7 @@ import java.util.UUID;
 @Service
 public class UtilsServiceImpl implements UtilsService {
 
-
+    // Método para criar a URL para obter todos os usuários de um curso específico com paginação
     public String createUrlGetAllUsersByCourse(UUID courseId, Pageable pageable) {
         return "/users?courseId=" + courseId + "&page=" + pageable.getPageNumber() + "&size="
                 + pageable.getPageSize() + "&sort=" + pageable.getSort().toString().replaceAll(": ", ",");

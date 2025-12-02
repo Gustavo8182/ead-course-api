@@ -8,8 +8,9 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class RestTemplateConfig {
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+@Bean
+//Esta classe configura o RestTemplate para ser usado na aplicação de cursos.
+public RestTemplate restTemplate(RestTemplateBuilder builder) {
         // Do any additional configuration here
         return builder.build();
     }
